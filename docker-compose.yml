@@ -1,0 +1,36 @@
+
+services:
+  app:
+    build: .
+    container_name: otp-auth-app
+    ports:
+      - "8000:5002"
+    depends_on:
+      - mysql
+      - redis
+    env_file:
+      - .env
+    networks:
+      - otp-net
+
+  mysql:
+    image: mysql:8
+    container_name: otp-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: otp_auth
+    ports:
+      - "3307:3306"
+    networks:
+      - otp-net
+
+  redis:
+    image: redis:alpine
+    container_name: otp-redis
+    ports:
+      - "6380:6379"
+    networks:
+      - otp-net
+
+networks:
+  otp-net:
