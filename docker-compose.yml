@@ -2,9 +2,9 @@
 services:
   app:
     build: .
-    container_name: otp-auth-app
+    container_name: otp-auth-app-new
     ports:
-      - "8000:5002"
+      - "6000:5002"
     depends_on:
       - mysql
       - redis

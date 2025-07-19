@@ -153,7 +153,7 @@ export async function signIn(
   }
 
   try {
-    const id = req.cookies.userData.id;
+    const id = req.cookies.userData.userId;
 
     const mobile = req.cookies.userData.mobile;
 

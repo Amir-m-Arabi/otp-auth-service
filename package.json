@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-     "dev": "ts-node-dev src/server.ts",    
+    "dev": "ts-node-dev src/server.ts", 
+    "swagger" : "ts-node swagger.ts",   
     "build": "tsc",                         
     "prod": "node dist/server.js",
     "prisma": "prisma generate && prisma migrate deploy"

@@ -3,7 +3,11 @@
     "target": "ES6",
     "module": "commonjs",
     "outDir": "./dist",          
-    "rootDir": "./src",          
+    "rootDir": "./src",    
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,      
     "esModuleInterop": true,
     "strict": true
   },
