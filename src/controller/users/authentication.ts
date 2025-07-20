@@ -115,11 +115,14 @@ export async function sendOTP(
     }
 
     const redisKey = `otp_limit:${phoneNumber}`;
-    const isBlocked = await redis.get(redisKey);
-    if (isBlocked) {
+    const otpRequestLimit = 5;
+    const timeWindow = 3600;
+
+    const requestCount = await redis.get(redisKey);
+
+    if (requestCount && parseInt(requestCount) >= otpRequestLimit) {
       return res.status(429).json({
-        message:
-          "OTP already sent. Please wait a minute before requesting again.",
+        message: `OTP limit reached. Please try again after ${timeWindow} seconds.`,
       });
     }
 
@@ -132,7 +135,11 @@ export async function sendOTP(
       },
     });
 
-    await redis.set(redisKey, "1", "EX", 60); // 60 ثانیه محدودیت
+    await redis
+      .multi()
+      .set(redisKey, "1", "EX", timeWindow)
+      .incr(redisKey)
+      .exec();
 
     console.log(`OTP for ${phoneNumber}: ${otp}`);
 

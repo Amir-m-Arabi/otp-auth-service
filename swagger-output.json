@@ -11,6 +11,16 @@
     "http"
   ],
   "paths": {
+    "/api-docs.json": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/user/otp-request": {
       "post": {
         "description": "",
