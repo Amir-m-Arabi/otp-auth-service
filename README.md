@@ -10,7 +10,7 @@ This project implements two-factor authentication using One-Time Passwords (OTP)
 
 We decided to use MySQL as our database solution because of its reliability, speed, and ability to handle large-scale applications. MySQL is a widely adopted relational database system that ensures data integrity and supports complex queries, making it an ideal choice for our OTP service.
 
-Prisma ORM was chosen to work as an abstraction layer over MySQL due to its ease of use and powerful features. With Prisma, we can efficiently manage our database models, and perform migrations, and queries in a type-safe manner. It reduces boilerplate code and simplifies interactions with the database, improving development speed and reducing the likelihood of errors.
+Prisma ORM was chosen to work as an abstraction layer over MySQL due to its ease of use and powerful features. With Prisma, we can efficiently manage our database models, perform migrations, and queries in a type-safe manner. It reduces boilerplate code and simplifies interactions with the database, improving development speed and reducing the likelihood of errors.
 
 Using Prisma, we can also easily integrate the database with our Docker environment and ensure smooth migrations and consistent schema updates, making it a key part of the architecture.
 
@@ -115,6 +115,86 @@ This setup will automatically configure the MySQL database along with the OTP Au
 
 ---
 
+## API Endpoints
+
+Below are the API endpoints provided by the OTP Authentication Service:
+
+### 1. **Request OTP**
+
+**URL**: `/user/otp-request`  
+**Method**: `POST`
+
+**Description**: Sends an OTP to the provided phone number.
+
+**Request Body**:
+
+```json
+{
+  "phoneNumber": "09123456789"
+}
+```
+
+**Responses**:
+
+- `200`: OTP sent successfully.
+- `400`: Bad Request (e.g., invalid phone number).
+- `429`: Too Many Requests.
+- `500`: Internal Server Error.
+
+---
+
+### 2. **Check OTP**
+
+**URL**: `/user/otp-check`  
+**Method**: `POST`
+
+**Description**: Verifies the OTP entered by the user.
+
+**Request Body**:
+
+```json
+{
+  "phoneNumber": "09123456789",
+  "otp": "123456"
+}
+```
+
+**Responses**:
+
+- `200`: OTP successfully verified.
+- `400`: Bad Request (e.g., incorrect OTP).
+- `500`: Internal Server Error.
+
+---
+
+### 3. **Sign In**
+
+**URL**: `/user/signIn`  
+**Method**: `GET`
+
+**Description**: Allows the user to sign in with the phone number and OTP.
+
+**Responses**:
+
+- `200`: Sign-in successful.
+- `400`: Bad Request.
+- `401`: Unauthorized.
+- `403`: Forbidden.
+- `500`: Internal Server Error.
+
+---
+
 ## Conclusion
 
 With these steps, you will have the OTP Authentication Service running locally, integrated with MySQL and Prisma ORM, and Dockerized for easy deployment. The service is designed to handle OTP generation and validation efficiently, providing an essential feature for enhancing security in modern applications.
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+**Author:** Amir Arabi  
+**GitHub Repository:** [Amir-m-Arabi/otp-auth-service](https://github.com/Amir-m-Arabi/otp-auth-service)
