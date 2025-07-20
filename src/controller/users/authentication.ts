@@ -115,19 +115,19 @@ export async function sendOTP(
     }
 
     const redisKey = `otp_limit:${phoneNumber}`;
-    const otpRequestLimit = 5;
-    const timeWindow = 3600;
+    const otpRequestLimit = 3;
+    const timeWindow = 120;
 
     const requestCount = await redis.get(redisKey);
 
     if (requestCount && parseInt(requestCount) >= otpRequestLimit) {
+      const ttl = await redis.ttl(redisKey);
       return res.status(429).json({
-        message: `OTP limit reached. Please try again after ${timeWindow} seconds.`,
+        message: `OTP limit reached. Please try again after ${ttl} seconds.`,
       });
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
     await prisma.otpRequest.create({
       data: {
         mobile: phoneNumber,
@@ -135,14 +135,13 @@ export async function sendOTP(
       },
     });
 
-    await redis
-      .multi()
-      .set(redisKey, "1", "EX", timeWindow)
-      .incr(redisKey)
-      .exec();
+    if (!requestCount) {
+      await redis.set(redisKey, 1, "EX", timeWindow);
+    } else {
+      await redis.incr(redisKey);
+    }
 
     console.log(`OTP for ${phoneNumber}: ${otp}`);
-
     return res.status(200).json({ message: "OTP sent successfully." });
   } catch (error) {
     console.error("OTP Error:", error);
